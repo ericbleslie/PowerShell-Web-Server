@@ -1,0 +1,36 @@
+{
+	"Bind":
+	[
+		"localhost",
+		"127.0.0.1"
+	],
+	"Port": 3000,
+	"Location": "/",
+	"Root": "/www/html",
+	"Template": "/www/template",
+	"Status": "/www/status",
+	"Index":
+	[
+		"index.ps1",
+		"index.html",
+		"index.htm",
+		"index.xhtml"
+	],
+	"Threads": 20,
+	"Logger":
+	{
+		"AccessLog": "/www/log/access.log"
+	},
+	"Router":
+	{
+		"/":
+		{
+			"try_files":
+			[
+				"$URL",
+				"$URL/",
+				"=404"
+			]
+		}
+	}
+}
