@@ -1,0 +1,4 @@
+# Actual config files
+.vscode
+config.json
+log/*.log

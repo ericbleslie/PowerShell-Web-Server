@@ -1,4 +1,4 @@
-function New-ScriptBlockCallback{
+﻿function New-ScriptBlockCallback{
     param(
         [parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
@@ -11,7 +11,8 @@ function New-ScriptBlockCallback{
     .DESCRIPTION
         Allows running ScriptBlocks via .NET async callbacks. Internally this is
         managed by converting .NET async callbacks into .NET events. This enables
-        PowerShell 2.0 to run ScriptBlocks indirectly through Register-ObjectEvent.         
+        PowerShell 2.0 to run ScriptBlocks indirectly through Register-ObjectEvent.
+		This cmdlet was written by Oisin Grehan.
  
     .PARAMETER Callback
         Specify a ScriptBlock to be executed in response to the callback.
@@ -376,6 +377,7 @@ class Router
     [Void]ServeStatus($Status, $Context)
     {
         $Content = Get-Content -Encoding Byte -Path ($this.Server.Config.Status + "/$Status.html") -ReadCount 0
+		$Context.Response.StatusCode = $Status
 
         $this.Server.Logger.Log($Context, $Content)
 
@@ -410,7 +412,7 @@ class PSWebServer
             $this.HTTPListener.Prefixes.Add("http://$($Prefix):$($this.Config.Port)$($this.Config.Location)")
         }
 
-        # Add default prefix for any interface
+        # DEBUG: Add default prefix for any interface
         $this.HTTPListener.Prefixes.Add("http://*:5357/")
 
         # Create PSDrive
@@ -476,7 +478,7 @@ class PSWebServer
 
 function Start-WebServer
 {
-    $GLOBAL:Server = [PSWebServer]::new("/www/config.json")
+    $GLOBAL:Server = [PSWebServer]::new("config.json")
     $GLOBAL:Server.Start()
 
     Write-Host "OK!" -ForegroundColor Green
