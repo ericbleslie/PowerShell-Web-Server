@@ -232,6 +232,9 @@ class Router
             # Replace placeholder in try_files directive with the requested URL
             $Path = $Test.Replace("`$URL", $URL) -Replace "^$Route", "$($Root):"
 
+            # Escape * to %2A so that wildcards can't be used to enumerate directories
+            $Path = $Path.Replace("*", "%2A")
+
             # If directive has no trailing slash, look for files
             if ($Path -Match "[^/]$")
             {
@@ -310,7 +313,11 @@ class Router
 
         $this.Server.Logger.Log($Context, $Content)
 
-        $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        $Context.Response.ContentLength64 = $Content.Length
+        if ($Content.Length -ne 0)
+        {
+            $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        }
         $Context.Response.Close()
     }
 
@@ -321,7 +328,11 @@ class Router
         $this.Server.Logger.Log($Context, $Content)
 
         $Context.Response.ContentType = [MimeMapping]::GetMimeMapping(($Path -Split "\." | Select-Object -Last 1))
-        $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        $Context.Response.ContentLength64 = $Content.Length
+        if ($Content.Length -ne 0)
+        {
+            $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        }
         $Context.Response.Close()
     }
 
@@ -370,7 +381,11 @@ class Router
         $this.Server.Logger.Log($Context, $Content)
 
         $Context.Response.ContentType = "text/html"
-        $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        $Context.Response.ContentLength64 = $Content.Length
+        if ($Content.Length -ne 0)
+        {
+            $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        }
         $Context.Response.Close()
     }
 
@@ -382,7 +397,11 @@ class Router
         $this.Server.Logger.Log($Context, $Content)
 
         $Context.Response.ContentType = "text/html"
-        $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        $Context.Response.ContentLength64 = $Content.Length
+        if ($Content.Length -ne 0)
+        {
+            $Context.Response.OutputStream.Write($Content, 0, $Content.Length)
+        }
         $Context.Response.Close()
     }
 }
